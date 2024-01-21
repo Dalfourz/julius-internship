@@ -3,11 +3,54 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useKeenSlider } from "keen-slider/react";
 
-const NewItems = () => {
+//Countdown timer component
+export const CountdownTimer = ({ expiryDate }) => {
+  const calculateTimeLeft = () => {
+    const now = new Date().getTime();
+    const difference = expiryDate - now;
+
+    if (difference <= 0) {
+      return { hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return { hours, minutes, seconds };
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timerInterval); // Cleanup on component unmount
+  }, [expiryDate]);
+
+  const formatTime = (time) => {
+    const pad = (num) => (num < 10 ? `0${num}` : num);
+    return `${pad(time.hours)}h ${pad(time.minutes)}m ${pad(time.seconds)}s`;
+  };
+
+  if (!expiryDate || expiryDate <= 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div>{formatTime(timeLeft)}</div>
+    </>
+  );
+};
+
+function NewItems() {
   const [newItems, setNewItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loaded, setLoaded] = useState(false);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -33,7 +76,7 @@ const NewItems = () => {
       } catch (error) {
         console.error(error.message);
       } finally {
-        setIsLoading(false); 
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -68,49 +111,6 @@ const NewItems = () => {
       </svg>
     );
   }
-
-  //Countdown timer component
-  const CountdownTimer = ({ expiryDate }) => {
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const difference = expiryDate - now;
-
-      if (difference <= 0) {
-        return { hours: 0, minutes: 0, seconds: 0 };
-      }
-
-      const hours = Math.floor(difference / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      return { hours, minutes, seconds };
-    };
-
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-    useEffect(() => {
-      const timerInterval = setInterval(() => {
-        setTimeLeft(calculateTimeLeft());
-      }, 1000);
-
-      return () => clearInterval(timerInterval); // Cleanup on component unmount
-    }, [expiryDate]);
-
-    const formatTime = (time) => {
-      const pad = (num) => (num < 10 ? `0${num}` : num);
-      return `${pad(time.hours)}h ${pad(time.minutes)}m ${pad(time.seconds)}s`;
-    };
-
-    if (!expiryDate || expiryDate <= 0) {
-      return null;
-    }
-
-    return (
-      <>
-        <div>{formatTime(timeLeft)}</div>
-      </>
-    );
-  };
 
   if (isLoading) {
     return (
@@ -166,12 +166,11 @@ const NewItems = () => {
                           <img
                             className="lazy"
                             src={newItem.authorImage}
-                            alt=""
-                          />
+                            alt="" />
                           <i className="fa fa-check"></i>
                         </Link>
                       </div>
-                      
+
                       {newItem.expiryDate && (
                         <div className="de_countdown">
                           <CountdownTimer expiryDate={newItem.expiryDate} />
@@ -201,8 +200,7 @@ const NewItems = () => {
                           <img
                             src={newItem.nftImage}
                             className="lazy nft__item_preview"
-                            alt=""
-                          />
+                            alt="" />
                         </Link>
                       </div>
                       <div className="nft__item_info">
@@ -237,6 +235,6 @@ const NewItems = () => {
       </section>
     );
   }
-};
+}
 
 export default NewItems;

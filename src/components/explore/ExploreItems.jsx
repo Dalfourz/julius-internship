@@ -1,9 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
+import axios from "axios";
+import { CountdownTimer } from "../home/NewItems";
 
 const ExploreItems = () => {
+  const [exploreItems, setExploreItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  
+  const [visibleItems, setVisibleItems] = useState(8);
+
+  const handleLoadMore = () => {
+    // Increase the number of visible items by 4
+    setVisibleItems((prevVisibleItems) => prevVisibleItems + 4);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axios.get(
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore`
+        );
+        const data = res.data;
+
+        setExploreItems(
+          data.map((e) => ({
+            id: e.id,
+            authorId: e.authorId,
+            authorImage: e.authorImage,
+            nftImage: e.nftImage,
+            nftId: e.nftId,
+            title: e.title,
+            price: e.price,
+            likes: e.likes,
+            expiryDate: e.expiryDate,
+          }))
+        );
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <div>
@@ -14,7 +56,8 @@ const ExploreItems = () => {
           <option value="likes_high_to_low">Most liked</option>
         </select>
       </div>
-      {new Array(8).fill(0).map((_, index) => (
+
+      {exploreItems.slice(0, visibleItems).map((items, index) => (
         <div
           key={index}
           className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
@@ -27,11 +70,16 @@ const ExploreItems = () => {
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
               >
-                <img className="lazy" src={AuthorImage} alt="" />
+                <img className="lazy" src={items.authorImage} alt="" />
                 <i className="fa fa-check"></i>
               </Link>
             </div>
-            <div className="de_countdown">5h 30m 32s</div>
+
+            {items.expiryDate && (
+              <div className="de_countdown">
+                <CountdownTimer expiryDate={items.expiryDate} />
+                </div>
+            )}
 
             <div className="nft__item_wrap">
               <div className="nft__item_extra">
@@ -52,26 +100,33 @@ const ExploreItems = () => {
                 </div>
               </div>
               <Link to="/item-details">
-                <img src={nftImage} className="lazy nft__item_preview" alt="" />
+                <img
+                  src={items.nftImage}
+                  className="lazy nft__item_preview"
+                  alt=""
+                />
               </Link>
             </div>
             <div className="nft__item_info">
               <Link to="/item-details">
-                <h4>Pinky Ocean</h4>
+                <h4>{items.title}</h4>
               </Link>
-              <div className="nft__item_price">1.74 ETH</div>
+              <div className="nft__item_price">{items.price} ETH</div>
               <div className="nft__item_like">
                 <i className="fa fa-heart"></i>
-                <span>69</span>
+                <span>{items.likes}</span>
               </div>
             </div>
           </div>
         </div>
       ))}
+
       <div className="col-md-12 text-center">
-        <Link to="" id="loadmore" className="btn-main lead">
+
+        <button to="" onClick={handleLoadMore} id="loadmore" className="btn-main lead">
           Load more
-        </Link>
+        </button>
+
       </div>
     </>
   );
