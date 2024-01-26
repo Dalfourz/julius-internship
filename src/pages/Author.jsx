@@ -3,17 +3,19 @@ import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useParams } from 'react-router-dom';
 
 const Author = () => {
   const [author, setAuthor] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const { authorId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const res = await axios.get(
-          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=73855012`
+          `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`
         );
         const data = res.data;
 
@@ -43,7 +45,7 @@ const Author = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [authorId]);
 
   return (
     <div id="wrapper">
