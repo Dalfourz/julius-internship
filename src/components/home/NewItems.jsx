@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useKeenSlider } from "keen-slider/react";
+import Skeleton from "../UI/Skeleton";
 
 //Countdown timer component
 export const CountdownTimer = ({ expiryDate }) => {
@@ -126,9 +127,9 @@ function NewItems() {
             {new Array(4).fill(0).map((_, index) => (
               <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
                 <div className="nft__item">
-                  <div className="author_list_pp loading-skeleton"></div>
-                  <div className="nft__item_wrap aspect-ratio-1x1 loading-skeleton">
-                    <div className="bg-secondary"></div>
+                  <div className="author_list_pp"></div>
+                  <div className="nft__item_wrap">
+                  <Skeleton width="100%" height="350px" borderRadius="8px" />
                   </div>
                 </div>
               </div>
