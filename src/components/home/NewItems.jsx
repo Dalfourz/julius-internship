@@ -129,7 +129,7 @@ function NewItems() {
                 <div className="nft__item">
                   <div className="author_list_pp"></div>
                   <div className="nft__item_wrap">
-                  <Skeleton width="100%" height="350px" borderRadius="8px" />
+                    <Skeleton width="100%" height="350px" borderRadius="8px" />
                   </div>
                 </div>
               </div>
@@ -167,7 +167,8 @@ function NewItems() {
                           <img
                             className="lazy"
                             src={newItem.authorImage}
-                            alt="" />
+                            alt=""
+                          />
                           <i className="fa fa-check"></i>
                         </Link>
                       </div>
@@ -201,7 +202,8 @@ function NewItems() {
                           <img
                             src={newItem.nftImage}
                             className="lazy nft__item_preview"
-                            alt="" />
+                            alt=""
+                          />
                         </Link>
                       </div>
                       <div className="nft__item_info">
