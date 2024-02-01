@@ -37,7 +37,8 @@ const HotCollections = () => {
     fetchData();
   }, []);
 
-  const [sliderRef, instanceRef] = useKeenSlider({
+  const [sliderRef, instanceRef] = useKeenSlider(
+    {
     slides: {
       perView: 4, //adjust as needed
       spacing: 8, //space between slides (in px)

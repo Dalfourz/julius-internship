@@ -6,10 +6,24 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Skeleton from "../components/UI/Skeleton";
 
+const FollowerCount = ({ followers, toggleFollow, isFollowing }) => {
+  return (
+    <div className="profile_follow de-flex">
+      <div className="de-flex-col">
+        <div className="profile_follower">{followers} followers</div>
+        <button onClick={toggleFollow} className="btn-main">
+          {isFollowing ? "Unfollow" : "Follow"}
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Author = () => {
   const [author, setAuthor] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const { authorId } = useParams();
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,66 +60,95 @@ const Author = () => {
     fetchData();
   }, [authorId]);
 
+  const toggleFollow = () => {
+    setIsFollowing(!isFollowing);
+    if (!isFollowing) {
+      setAuthor({ ...author, followers: author.followers + 1 });
+    } else {
+      setAuthor({ ...author, followers: author.followers - 1 });
+    }
+  };
+
   return (
     <>
       {isLoading ? (
         <div id="wrapper">
-        <div className="no-bottom no-top" id="content">
-          <div id="top"></div>
+          <div className="no-bottom no-top" id="content">
+            <div id="top"></div>
 
-          <section
-            id="profile_banner"
-            aria-label="section"
-            className="text-light"
-            data-bgimage="url(images/author_banner.jpg) top"
-            style={{ background: `url(${AuthorBanner}) top` }}
-          ></section>
+            <section
+              id="profile_banner"
+              aria-label="section"
+              className="text-light"
+              data-bgimage="url(images/author_banner.jpg) top"
+              style={{ background: `url(${AuthorBanner}) top` }}
+            ></section>
 
-          <section aria-label="section">
-            <div className="container">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="d_profile de-flex">
-                    <div className="de-flex-col">
-                      <div className="profile_avatar">
-                        <Skeleton width="140px" height="140px" borderRadius="50%" />
-                        <i className="fa fa-check"></i>
-                        <div className="profile_name">
-                          <h4>
-                          <Skeleton width="160px" height="25px" borderRadius="5px" />
-                            <span className="profile_username">
-                            <Skeleton width="160px" height="25px" borderRadius="5px" />
-                            </span>
-                            <span id="wallet" className="profile_wallet">
-                            <Skeleton width="160px" height="25px" borderRadius="5px" />
-                            </span>
-                          </h4>
+            <section aria-label="section">
+              <div className="container">
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="d_profile de-flex">
+                      <div className="de-flex-col">
+                        <div className="profile_avatar">
+                          <Skeleton
+                            width="140px"
+                            height="140px"
+                            borderRadius="50%"
+                          />
+                          <i className="fa fa-check"></i>
+                          <div className="profile_name">
+                            <h4>
+                              <Skeleton
+                                width="160px"
+                                height="25px"
+                                borderRadius="5px"
+                              />
+                              <span className="profile_username">
+                                <Skeleton
+                                  width="160px"
+                                  height="25px"
+                                  borderRadius="5px"
+                                />
+                              </span>
+                              <span id="wallet" className="profile_wallet">
+                                <Skeleton
+                                  width="160px"
+                                  height="25px"
+                                  borderRadius="5px"
+                                />
+                              </span>
+                            </h4>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="profile_follow de-flex">
-                      <div className="de-flex-col">
-                        <div className="profile_follower pt-2">
-                        <Skeleton width="160px" height="40px" borderRadius="5px" />
+                      <div className="profile_follow de-flex">
+                        <div className="de-flex-col">
+                          <div className="profile_follower pt-2">
+                            <Skeleton
+                              width="160px"
+                              height="40px"
+                              borderRadius="5px"
+                            />
+                          </div>
+                          <Link to="#" className="btn-main">
+                            Follow
+                          </Link>
                         </div>
-                        <Link to="#" className="btn-main">
-                          Follow
-                        </Link>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="col-md-12">
-                  <div className="de_tab tab_simple">
-                    <AuthorItems isLoading={isLoading}/>
+                  <div className="col-md-12">
+                    <div className="de_tab tab_simple">
+                      <AuthorItems isLoading={isLoading} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
-      </div>
       ) : (
         <div id="wrapper">
           <div className="no-bottom no-top" id="content">
@@ -145,22 +188,17 @@ const Author = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="profile_follow de-flex">
-                        <div className="de-flex-col">
-                          <div className="profile_follower">
-                            {author.followers} followers
-                          </div>
-                          <Link to="#" className="btn-main">
-                            Follow
-                          </Link>
-                        </div>
-                      </div>
+                      <FollowerCount
+                        followers={author.followers}
+                        toggleFollow={toggleFollow}
+                        isFollowing={isFollowing}
+                      />
                     </div>
                   </div>
 
                   <div className="col-md-12">
                     <div className="de_tab tab_simple">
-                      <AuthorItems />
+                      <AuthorItems author={author} />
                     </div>
                   </div>
                 </div>
