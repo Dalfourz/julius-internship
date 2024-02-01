@@ -39,7 +39,6 @@ const ExploreItems = () => {
             // Default API URL
         }
 
-        // Fetch data from the selected API
         const res = await axios.get(apiUrl);
         const data = res.data;
 
@@ -63,7 +62,6 @@ const ExploreItems = () => {
       }
     };
 
-    // Fetch data when the component mounts or when the selected option changes
     fetchData();
   }, [selectedOption]);
 
