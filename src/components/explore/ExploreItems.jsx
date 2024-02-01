@@ -91,7 +91,7 @@ const ExploreItems = () => {
                 className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
                 style={{ display: "block", backgroundSize: "cover" }}
               >
-                <Skeleton key={index} width="250px" height="300px" borderRadius="5px" />
+                <Skeleton key={index} width="100%" height="350px" borderRadius="5px" />
               </div>
             ))}
           </>
@@ -105,7 +105,7 @@ const ExploreItems = () => {
               <div className="nft__item">
                 <div className="author_list_pp">
                   <Link
-                    to="/author"
+                    to={`/author/${items.authorId}`}
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
                   >

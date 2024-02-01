@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthorImage from "../../images/author_thumbnail.jpg";
 import axios from "axios";
+import Skeleton from "../UI/Skeleton";
 
 const TopSellers = () => {
   const [topSellers, setTopSellers] = useState([]);
@@ -54,14 +55,11 @@ const TopSellers = () => {
                       <li key={index}>
                         <div className="card__header d-flex flex-row">
                           <div>
-                            <img
-                              className="card__header header__img skeleton"
-                              alt=""
-                            />
+                          <Skeleton width="50px" height="50px" borderRadius="50%" />
                           </div>
-                          <div className="w-75 justify-content-center pl-2 pt-2">
-                            <div className="skeleton skeleton-text skeleton-text__body "></div>
-                            <div className="skeleton skeleton-text skeleton-text__body "></div>
+                          <div className="w-75 justify-content-center pl-2">
+                            <Skeleton width="160px" height="15px" borderRadius="5px" />
+                            <Skeleton width="160px" height="15px" borderRadius="5px" />
                           </div>
                         </div>
                       </li>
@@ -87,7 +85,7 @@ const TopSellers = () => {
                   {topSellers.map((topSellers, index) => (
                     <li key={index}>
                       <div className="author_list_pp">
-                        <Link to="/author">
+                        <Link to={`/author/${topSellers.authorId}`}>
                           <img
                             className="lazy pp-author"
                             src={topSellers.authorImage}
