@@ -9,6 +9,19 @@ const HotCollections = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
+  const [sliderRef, instanceRef] = useKeenSlider(
+    {
+    slides: {
+      perView: 4, //adjust as needed
+      spacing: 8, //space between slides (in px)
+    },
+    loop: true, //enables continuous loop
+    mode: "free-snap",
+    created() {
+      setLoaded(true);
+    },
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -24,6 +37,7 @@ const HotCollections = () => {
             title: e.title,
             authorImage: e.authorImage,
             nftImage: e.nftImage,
+            nftId:e.nftId,
             authorId: e.authorId,
             code: e.code,
           }))
@@ -31,24 +45,11 @@ const HotCollections = () => {
       } catch (error) {
         console.error(error.message);
       } finally {
-        setIsLoading(false);
+        setIsLoading(true);
       }
     };
     fetchData();
   }, []);
-
-  const [sliderRef, instanceRef] = useKeenSlider(
-    {
-    slides: {
-      perView: 4, //adjust as needed
-      spacing: 8, //space between slides (in px)
-    },
-    loop: true, //enables continuous loop
-    mode: "free-snap",
-    created() {
-      setLoaded(true);
-    },
-  });
 
   function Arrow(props) {
     return (
@@ -93,8 +94,8 @@ const HotCollections = () => {
                     <Link to="/explore">
                       <Skeleton width="160px" height="25px" borderRadius="5px" />
                     </Link>
-                    <Skeleton width="120px" height="25px" borderRadius="5px" />
                   </div>
+                    <Skeleton width="120px" height="25px" borderRadius="5px" />
                 </div>
               </div>
             ))}
@@ -121,7 +122,7 @@ const HotCollections = () => {
                   key={index}>
                     <div className="nft_coll">
                       <div className="nft_wrap">
-                        <Link to="/item-details">
+                        <Link to={`/item-details/${collection.nftId}`}>
                           <img src={collection.nftImage} className="lazy img-fluid" alt="" />
                         </Link>
                       </div>
@@ -132,7 +133,7 @@ const HotCollections = () => {
                         <i className="fa fa-check"></i>
                       </div>
                       <div className="nft_coll_info">
-                        <Link to="/explore">
+                        <Link to={`/item-details/${collection.nftId}`}>
                           <h4>{collection.title}</h4>
                         </Link>
                         <span>ERC-{collection.code}</span>
@@ -141,8 +142,8 @@ const HotCollections = () => {
                   </div>
                 ))}
               </div>
-              {loaded && instanceRef.current && (
-                <>
+              {loaded && instanceRef.current && 
+              (<>
                   <div className="arrow-wrapper">
                     <Arrow left onClick={(e) => instanceRef.current?.prev()} />
                   </div>
@@ -150,7 +151,8 @@ const HotCollections = () => {
                     <Arrow onClick={(e) => instanceRef.current?.next()} />
                   </div>
                 </>
-              )}
+              )
+              }
             </div>
           </div>
         </div>
