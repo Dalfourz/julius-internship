@@ -1,6 +1,6 @@
 .keen-slider {
   /* Your container styles */
-  /* position: relative; */
+  position: relative;
   display: flex;
   overflow: hidden;
 }

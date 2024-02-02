@@ -67,6 +67,7 @@ function NewItems() {
             title: e.title,
             authorImage: e.authorImage,
             nftImage: e.nftImage,
+            nftId: e.nftId,
             authorId: e.authorId,
             code: e.code,
             price: e.price,
@@ -198,7 +199,7 @@ function NewItems() {
                           </div>
                         </div>
 
-                        <Link to="/item-details">
+                        <Link to={`/item-details/${newItem.nftId}`}>
                           <img
                             src={newItem.nftImage}
                             className="lazy nft__item_preview"
@@ -207,7 +208,7 @@ function NewItems() {
                         </Link>
                       </div>
                       <div className="nft__item_info">
-                        <Link to="/item-details">
+                        <Link to={`/item-details/${newItem.nftId}`}>
                           <h4>{newItem.title}</h4>
                         </Link>
                         <div className="nft__item_price">
@@ -222,6 +223,7 @@ function NewItems() {
                   </div>
                 ))}
               </div>
+              
               {loaded && instanceRef.current && (
                 <>
                   <div className="arrow-wrapper">
