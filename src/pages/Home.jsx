@@ -6,14 +6,14 @@ import LandingIntro from "../components/home/LandingIntro";
 import NewItems from "../components/home/NewItems";
 import TopSellers from "../components/home/TopSellers";
 import AOS from "aos";
-import 'aos/dist/aos.css'; 
+import "aos/dist/aos.css";
 
 const Home = () => {
   useEffect(() => {
     // Initialize AOS
     AOS.init({
       // settings
-      duration: 2000, // example setting
+      // duration: 2000, // example setting
     });
 
     // Scroll to top on component mount
@@ -26,9 +26,28 @@ const Home = () => {
         <div id="top"></div>
         <Landing />
         <LandingIntro />
-        <HotCollections data-aos="zoom-in"/>
-        <NewItems />
-        <TopSellers />
+        <div
+          data-aos="fade-zoom-in"
+          data-aos-easing="ease-in-back"
+          data-aos-delay="200"
+          data-aos-offset="0"
+        >
+          <HotCollections />
+        </div>
+        <div
+          data-aos="zoom-in"
+          data-aos-duration="1000"
+          data-aos-easing="ease-in-out"
+        >
+          <NewItems />
+        </div>
+        <div
+          data-aos="zoom-in"
+          data-aos-duration="1000"
+          data-aos-easing="ease-in-out"
+        >
+          <TopSellers />
+        </div>
         <BrowseByCategory />
       </div>
     </div>
