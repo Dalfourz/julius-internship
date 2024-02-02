@@ -45,7 +45,7 @@ const HotCollections = () => {
       } catch (error) {
         console.error(error.message);
       } finally {
-        setIsLoading(true);
+        setIsLoading(false);
       }
     };
     fetchData();
