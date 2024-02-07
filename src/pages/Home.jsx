@@ -10,13 +10,8 @@ import "aos/dist/aos.css";
 
 const Home = () => {
   useEffect(() => {
-    // Initialize AOS
     AOS.init({
-      // settings
-      // duration: 2000, // example setting
     });
-
-    // Scroll to top on component mount
     window.scrollTo(0, 0);
   }, []);
 
@@ -27,23 +22,22 @@ const Home = () => {
         <Landing />
         <LandingIntro />
         <div
-          data-aos="fade-zoom-in"
-          data-aos-easing="ease-in-back"
-          data-aos-delay="200"
-          data-aos-offset="0"
+          data-aos="zoom-in"
+          data-aos-duration="800"
+          data-aos-easing="ease-in-out"
         >
           <HotCollections />
         </div>
         <div
           data-aos="zoom-in"
-          data-aos-duration="1000"
+          data-aos-duration="800"
           data-aos-easing="ease-in-out"
         >
           <NewItems />
         </div>
         <div
           data-aos="zoom-in"
-          data-aos-duration="1000"
+          data-aos-duration="800"
           data-aos-easing="ease-in-out"
         >
           <TopSellers />
