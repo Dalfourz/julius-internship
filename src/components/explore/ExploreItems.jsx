@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { CountdownTimer } from "../home/NewItems";
 import Skeleton from "../UI/Skeleton";
+import AOS from "aos";
+import "aos/dist/aos.css";
+AOS.init();
 
 const ExploreItems = () => {
   const [exploreItems, setExploreItems] = useState([]);
@@ -25,18 +28,22 @@ const ExploreItems = () => {
         // Choose API URL based on the selected option
         switch (selectedOption) {
           case "price_low_to_high":
-            apiUrl = "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=price_low_to_high";
+            apiUrl =
+              "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=price_low_to_high";
             break;
           case "price_high_to_low":
-            apiUrl = "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=price_high_to_low";
+            apiUrl =
+              "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=price_high_to_low";
             // Fix typo here
             break;
           case "likes_high_to_low":
-            apiUrl = "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=likes_high_to_low";
+            apiUrl =
+              "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=likes_high_to_low";
             break;
           default:
-            apiUrl = "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore";
-            // Default API URL
+            apiUrl =
+              "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore";
+          // Default API URL
         }
 
         const res = await axios.get(apiUrl);
@@ -72,7 +79,12 @@ const ExploreItems = () => {
   return (
     <>
       <div>
-        <select id="filter-items" value={selectedOption} defaultValue="" onChange={handleSelectChange}>
+        <select
+          id="filter-items"
+          value={selectedOption}
+          defaultValue=""
+          onChange={handleSelectChange}
+        >
           <option value="">Default</option>
           <option value="price_low_to_high">Price, Low to High</option>
           <option value="price_high_to_low">Price, High to Low</option>
@@ -89,7 +101,12 @@ const ExploreItems = () => {
                 className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
                 style={{ display: "block", backgroundSize: "cover" }}
               >
-                <Skeleton key={index} width="100%" height="350px" borderRadius="5px" />
+                <Skeleton
+                  key={index}
+                  width="100%"
+                  height="350px"
+                  borderRadius="5px"
+                />
               </div>
             ))}
           </>
@@ -136,7 +153,7 @@ const ExploreItems = () => {
                       </div>
                     </div>
                   </div>
-                  <Link to="/item-details">
+                  <Link to={`/item-details/${items.nftId}`}>
                     <img
                       src={items.nftImage}
                       className="lazy nft__item_preview"
@@ -145,7 +162,7 @@ const ExploreItems = () => {
                   </Link>
                 </div>
                 <div className="nft__item_info">
-                  <Link to="/item-details">
+                  <Link to={`/item-details/${items.nftId}`}>
                     <h4>{items.title}</h4>
                   </Link>
                   <div className="nft__item_price">{items.price} ETH</div>
@@ -166,6 +183,11 @@ const ExploreItems = () => {
           onClick={handleLoadMore}
           id="loadmore"
           className="btn-main lead"
+          data-aos="fade-up"
+          data-aos-offset="50"
+          data-aos-delay="50"
+          data-aos-duration="800"
+          data-aos-easing="ease-in-out"
         >
           Load more
         </button>

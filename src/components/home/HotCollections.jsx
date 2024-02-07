@@ -1,26 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useKeenSlider } from "keen-slider/react";
 import Skeleton from "../UI/Skeleton";
+
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const HotCollections = () => {
   const [collections, setCollections] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [loaded, setLoaded] = useState(false);
-
-  const [sliderRef, instanceRef] = useKeenSlider(
-    {
-    slides: {
-      perView: 4, //adjust as needed
-      spacing: 8, //space between slides (in px)
-    },
-    loop: true, //enables continuous loop
-    mode: "free-snap",
-    created() {
-      setLoaded(true);
-    },
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +26,7 @@ const HotCollections = () => {
             title: e.title,
             authorImage: e.authorImage,
             nftImage: e.nftImage,
-            nftId:e.nftId,
+            nftId: e.nftId,
             authorId: e.authorId,
             code: e.code,
           }))
@@ -51,26 +40,102 @@ const HotCollections = () => {
     fetchData();
   }, []);
 
-  function Arrow(props) {
+  function PrevArrow(props) {
+    const { className, style, onClick } = props;
     return (
-      <svg
-        onClick={props.onClick}
-        className={`arrow ${props.left ? "arrow--left" : "arrow--right"} `}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
+      <button
+        className={className}
+        style={{
+          ...style,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          border: "1px solid lightgray",
+          borderRadius: "50%",
+          width: "52px",
+          height: "52px",
+          color: "black",
+          background: "white",
+          zIndex: "100",
+          cursor: "pointer",
+        }}
+        onClick={onClick}
       >
-        {props.left && (
-          <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
-        )}
-        {!props.left && (
-          <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
-        )}
-      </svg>
+        <i
+          className="fa fa-chevron-left"
+          style={{ fontSize: "10px", transform: "translate(-10px, 1px)" }}
+        ></i>
+      </button>
     );
   }
 
+  function NextArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <button
+        className={className}
+        style={{
+          ...style,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          border: "1px solid lightgray",
+          borderRadius: "50%",
+          width: "52px",
+          height: "52px",
+          color: "black",
+          background: "white",
+          zIndex: "100",
+          cursor: "pointer",
+        }}
+        onClick={onClick}
+      >
+        <i
+          className="fa fa-chevron-right"
+          style={{ fontSize: "10px", transform: "translate(-10px, 1px)" }}
+        ></i>
+      </button>
+    );
+  }
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    arrows: "true",
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: false,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+  };
+
   if (isLoading) {
-    return(
+    return (
       <section id="section-collections" className="no-bottom">
         <div className="container">
           <div className="row">
@@ -92,10 +157,14 @@ const HotCollections = () => {
                   </div>
                   <div className="nft_coll_info">
                     <Link to="/explore">
-                      <Skeleton width="160px" height="25px" borderRadius="5px" />
+                      <Skeleton
+                        width="160px"
+                        height="25px"
+                        borderRadius="5px"
+                      />
                     </Link>
                   </div>
-                    <Skeleton width="120px" height="25px" borderRadius="5px" />
+                  <Skeleton width="120px" height="25px" borderRadius="5px" />
                 </div>
               </div>
             ))}
@@ -114,21 +183,27 @@ const HotCollections = () => {
                 <div className="small-border bg-color-2"></div>
               </div>
             </div>
-            <div className="navigation-wrapper">
-              <div ref={sliderRef} className="keen-slider">
+            <div>
+              <Slider {...settings}>
                 {collections.map((collection, index) => (
-                  <div 
-                  className="keen-slider__slide col-lg-3 col-md-6 col-sm-6 col-xs-12" 
-                  key={index}>
+                  <div className="px-3" key={index}>
                     <div className="nft_coll">
                       <div className="nft_wrap">
                         <Link to={`/item-details/${collection.nftId}`}>
-                          <img src={collection.nftImage} className="lazy img-fluid" alt="" />
+                          <img
+                            src={collection.nftImage}
+                            className="lazy img-fluid"
+                            alt=""
+                          />
                         </Link>
                       </div>
                       <div className="nft_coll_pp">
                         <Link to={`/author/${collection.authorId}`}>
-                          <img className="lazy pp-coll" src={collection.authorImage} alt="" />
+                          <img
+                            className="lazy pp-coll"
+                            src={collection.authorImage}
+                            alt=""
+                          />
                         </Link>
                         <i className="fa fa-check"></i>
                       </div>
@@ -141,18 +216,7 @@ const HotCollections = () => {
                     </div>
                   </div>
                 ))}
-              </div>
-              {loaded && instanceRef.current && 
-              (<>
-                  <div className="arrow-wrapper">
-                    <Arrow left onClick={(e) => instanceRef.current?.prev()} />
-                  </div>
-                  <div className="arrow-wrapper__right">
-                    <Arrow onClick={(e) => instanceRef.current?.next()} />
-                  </div>
-                </>
-              )
-              }
+              </Slider>
             </div>
           </div>
         </div>
